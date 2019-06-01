@@ -114,6 +114,53 @@ test_x = movies2.drop(['revenue', 'class'], axis=1).iloc[6000:]
 test_y = movies2['class'].iloc[6000:]
 
 #DO RANDOM FOREST
+# Import the model we are using
+from sklearn.ensemble import RandomForestRegressor
+
+random_forest = RandomForestRegressor(n_estimators = 1000, random_state = 42)
+
+# Train the model on training data
+random_forest.fit(train_x, train_y);
+
+# Use the forest's predict method on the test data
+predictions = random_forest.predict(test_x)
+
+# Calculate the absolute errors
+errors = abs(predictions - test_y)
+
+# Print out the mean absolute error (mae)
+print('Mean Absolute Error:', round(np.mean(errors), 2), 'degrees.')
+
 
 
 #DO KNN
+from sklearn.preprocessing import StandardScaler  
+scaler = StandardScaler()  
+scaler.fit(train_x)
+
+X_train = scaler.transform(train_x)  
+X_test = scaler.transform(test_x) 
+
+from sklearn.neighbors import KNeighborsClassifier  
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, train_y)
+y_pred = knn.predict(X_test)
+
+from sklearn import metrics
+print("Accuracy:",metrics.accuracy_score(test_y, y_pred))
+
+error = []
+
+# Calculating error for K values between 1 and 40
+for i in range(1, 40):  
+    knn = KNeighborsClassifier(n_neighbors=i)
+    knn.fit(X_train,train_y)
+    pred_i = knn.predict(X_test)
+    error.append(np.mean(pred_i != test_y))
+    
+plt.figure(figsize=(12, 6))  
+plt.plot(range(1, 40), error, color='red', linestyle='dashed', marker='o',  
+         markerfacecolor='blue', markersize=10)
+plt.title('Error Rate K Value')  
+plt.xlabel('K Value')  
+plt.ylabel('Mean Error') 
