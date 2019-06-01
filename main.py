@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt 
+
 
 movies = pd.read_csv('data/AllMoviesDetailsCleaned.csv', sep=';', low_memory=False)
 cast = pd.read_csv('data/AllMoviesCastingRaw.csv', sep=';', low_memory=False)
